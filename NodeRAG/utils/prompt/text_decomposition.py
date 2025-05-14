@@ -138,21 +138,22 @@ Set `decide` value to `True` if you want to migrate the backend.
 Output:
 [
   {{
-    "semantic_unit": "On 2023-01-19, @PCR0WLEY opened Issue #133 proposing migration of the backend from Elasticsearch to Odoo, noting that Elasticsearch would temporarily remain functional due to Issue #123.",
-    "entities": ["@PCR0WLEY", "#133", "2023-01-19 00:26", "ELASTICSEARCH", "ODOO", "#123", "DECIDE", "TRUE"],
+    "semantic_unit": "On 2023-01-19, @PCR0WLEY opened Issue #133 proposing migration of the backend from Elasticsearch to Odoo with setting `decide` to `True`, noting that Elasticsearch would temporarily remain functional due to Issue #123.",
+    "entities": ["@PCR0WLEY", "ISSUE #133", "2023-01-19", "ELASTICSEARCH", "ODOO", "ISSUE #123", "DECIDE", "TRUE"],
     "relationships": [
-      "@PCR0WLEY, opened, #133",
-      "ELASTICSEARCH, will work temporarily due to, #123",
+      "@PCR0WLEY, opened, ISSUE #133",
+      "ISSEUE #133, was opened on, 2023-01-19"
+      "ELASTICSEARCH, will work temporarily due to, ISSUE #123",
       "ELASTICSEARCH, is planned to be migrated to, ODOO",
       "DECIDE, will be set to, TRUE"
     ]
   }},
   {{
     "semantic_unit": "@GOTTERBILD suggested that the issue might belong to the roadmap project, referencing Issue #192.",
-    "entities": ["@GOTTERBILD", "#192", "ROADMAP"],
+    "entities": ["@GOTTERBILD", "ISSUE #192", "ROADMAP"],
     "relationships": [
-      "@GOTTERBILD, suggested linking, #192",
-      "#133, may belong to, ROADMAP"
+      "@GOTTERBILD, suggested linking, ISSUE #192",
+      "ISSUE #133, may belong to, ROADMAP"
     ]
   }},
   ...
