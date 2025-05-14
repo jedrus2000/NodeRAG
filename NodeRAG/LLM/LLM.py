@@ -25,7 +25,7 @@ from ..LLM.LLM_base import (
 from openai import (
     RateLimitError,
     Timeout,
-    APIConnectionError,
+    APIConnectionError, base_url,
 )
 
 from google.api_core.exceptions import (
@@ -41,6 +41,7 @@ from google.api_core.exceptions import (
 
 
 
+#from openai import AsyncOpenAI
 
 OpenAI = LazyImport('openai','OpenAI')
 AzureOpenAI = LazyImport('openai','AzureOpenAI')
@@ -92,8 +93,8 @@ class OPENAI(LLM):
         if self.api_keys is None:
             self.api_keys = os.getenv("OPENAI_API_KEY")
             
-        self.client = OpenAI(api_key=self.api_keys)
-        self.client_async = AsyncOpenAI(api_key=self.api_keys)
+        self.client = OpenAI(api_key=self.api_keys) #, base_url="http://localhost:11434/v1")
+        self.client_async = AsyncOpenAI(api_key=self.api_keys) #, base_url="http://localhost:11434/v1")
         self.config = self.extract_config(Config)
     
         
@@ -208,8 +209,8 @@ class OpenAI_Embedding(LLM):
         
         if api_keys is None:
             api_keys = os.getenv("OPENAI_API_KEY")
-        self.client = OpenAI(api_key=api_keys)
-        self.client_async = AsyncOpenAI(api_key=api_keys)
+        self.client = OpenAI(api_key=api_keys, base_url="http://localhost:11434/v1")
+        self.client_async = AsyncOpenAI(api_key=api_keys, base_url="http://localhost:11434/v1")
     
     @backoff.on_exception(backoff.expo, 
                           [RateLimitError, Timeout, APIConnectionError], 

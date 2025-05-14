@@ -64,7 +64,11 @@ def get_token_counter(model_name:str) -> token_counter:
     # elif 'deepseek' in model_name:
     #     return deepseek_counter(model_name)
     else:
-        raise ValueError(f"Unsupported model {model_name}")
+        #raise ValueError(f"Unsupported model {model_name}")
+        token = tiktoken_counter('gpt-4o')
+        token.token_limit_bound = 1280000
+        return token
+
 
 
     
