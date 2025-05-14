@@ -1,4 +1,4 @@
-text_decomposition_prompt = """
+text_decomposition_prompt_org = """
 Goal: Given a text, segment it into multiple semantic units, each containing detailed descriptions of specific events or activities. 
 Perform the following tasks:
 1. Provide a summary for each semantic unit while retaining all crucial details relevant to the original context.
@@ -104,3 +104,63 @@ text_decomposition_prompt_Chinese = """
 文本:{text} 
 """
 
+text_decomposition_prompt = """
+Goal: Given a GitHub issue thread which is Markdown text, segment it into multiple semantic units, each containing detailed descriptions of specific actions, discussions, updates, or decisions recorded in the issue and its comments. 
+Perform the following tasks:
+1. Provide a summary for each semantic unit while retaining all crucial technical or organizational details relevant to the original issue context.
+2. Extract all entities directly from the original text of each semantic unit, not from the paraphrased summary. Format each entity name in UPPERCASE. Extract all types of entities, including usernames, repositories, issues, pull requests, technologies (e.g., Elasticsearch, Odoo, Python), dates, organizations, URLs, modules, and any other identifiable named entities.
+3. From the entities extracted in Step 2, list all relationships within the semantic unit and the corresponding original context in the form of a string separated by commas: "ENTITY_A, RELATION_TYPE, ENTITY_B". The RELATION_TYPE can be a descriptive sentence, but the entities involved must be from Step 2. Ensure the string contains three elements representing two entities and the relationship type.
+
+requirements:
+1. Temporal Entities: Represent time and date mentions exactly as written in the original GitHub issue, without completing missing parts. Preserve formats like "2023-01-19 00:26", "2024-01-09", or any partial time references.
+2. URLs: Treat full URLs as entities.
+3. Usernames: Prefix GitHub usernames with "@" and treat them as entities (e.g., "@PCR0WLEY").
+4. Repository names and Issue/PR numbers: Treat repository names (e.g., "CROWLEYSYSTEMS/ODOO") and references to issues/PRs (e.g., "#133", "#206") as separate entities.
+5. Modules, libraries, and technologies mentioned should also be extracted as entities (e.g., "CONNECTOR_ELASTICSEARCH", "PYTHON 3.10", "ODOO").
+6. Variable names enclosed within backticks should be also extracted as entities.
+
+
+Each semantic unit should be represented as a dictionary with three keys:
+- `semantic_unit` (paraphrased but detailed summary)
+- `entities` (list of UPPERCASE entities directly from the original text)
+- `relationships` (list of relationship strings with exactly two entities and a descriptive relation).
+
+Store all these dictionaries in a list for structured access and processing.
+
+Example:
+
+Text:
+#133 Issue: Research migrating Elasticsearch to Odoo  
+@pcr0wley opened issue at 2023-01-19 00:26:  
+Although Elasticsearch will work as-is (due to #123) when switching to Odoo, eventually we should migrate the backend to Odoo...
+Set `decide` value to `True` if you want to migrate the backend.
+
+Output:
+[
+  {{
+    "semantic_unit": "On 2023-01-19, @PCR0WLEY opened Issue #133 proposing migration of the backend from Elasticsearch to Odoo, noting that Elasticsearch would temporarily remain functional due to Issue #123.",
+    "entities": ["@PCR0WLEY", "#133", "2023-01-19 00:26", "ELASTICSEARCH", "ODOO", "#123", "DECIDE", "TRUE"],
+    "relationships": [
+      "@PCR0WLEY, opened, #133",
+      "ELASTICSEARCH, will work temporarily due to, #123",
+      "ELASTICSEARCH, is planned to be migrated to, ODOO",
+      "DECIDE, will be set to, TRUE"
+    ]
+  }},
+  {{
+    "semantic_unit": "@GOTTERBILD suggested that the issue might belong to the roadmap project, referencing Issue #192.",
+    "entities": ["@GOTTERBILD", "#192", "ROADMAP"],
+    "relationships": [
+      "@GOTTERBILD, suggested linking, #192",
+      "#133, may belong to, ROADMAP"
+    ]
+  }},
+  ...
+]
+
+#########
+Real_Data:
+#########
+Text:{text}
+
+"""
