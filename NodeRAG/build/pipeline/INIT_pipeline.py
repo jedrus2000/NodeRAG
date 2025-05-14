@@ -1,5 +1,6 @@
 import os
 import json
+from pathlib import Path
 from ...config import NodeConfig
 from ...logging import info_timer
 from ...storage import genid
@@ -28,17 +29,18 @@ class INIT_pipeline():
             raise ValueError(f'Input folder {self.config.input_folder} does not exist')
         
     def load_files(self):
-        
-        
+        files = [
+            p for p in Path(self.config.input_folder).rglob('*')
+        ]
         if self.config.docu_type == 'mixed':
-            for file in os.listdir(self.config.input_folder):
-                if file.endswith('.txt') or file.endswith('.md'):
-                    file_path = os.path.join(self.config.input_folder, file)
+            for file in files:
+                if file.suffix in ['.md']:
+                    file_path = str(file)
                     self.documents_path.append(file_path)
         else:
-            for file in os.listdir(self.config.input_folder):
-                if file.endswith(f'.{self.config.docu_type}'):
-                    file_path = os.path.join(self.config.input_folder, file)
+            for file in files:
+                if file.suffix == f'.{self.config.docu_type}':
+                    file_path = str(file)
                     self.documents_path.append(file_path)
                     
         if len(self.documents_path) == 0:
